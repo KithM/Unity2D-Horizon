@@ -11,9 +11,7 @@ public class GameController : MonoBehaviour {
 		sc = FindObjectOfType<SpriteController> ();
 	}
 
-	// Use this for initialization
-	void Start () {
-		// TODO: DEBUG ONLY
-		// InvokeRepeating ("SpawnRandomShip", 1f, 10f);
+	public void ExitGame () {
+		Application.Quit ();
 	}
 }

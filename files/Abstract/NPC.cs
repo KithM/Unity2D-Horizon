@@ -126,7 +126,7 @@ public class NPC : MonoBehaviour {
 		target = null;
 	}
 
-	void LateUpdate(){
+	void FixedUpdate(){
 		if (gameObject.transform.position != targetPosition) {
 			float delta = Speed * Time.deltaTime;
 
@@ -165,18 +165,14 @@ public class NPC : MonoBehaviour {
 
 	void Shoot(){
 		if (target != null && Vector2.Distance(transform.position, target.position) < fireRange) {
-			Debug.Log ("Firing at " + target.gameObject.name);
 
 			var bulletGO = Object.Instantiate (GameController.sc.bulletPrefab, gameObject.transform.position, transform.rotation);
+			var bullet = bulletGO.GetComponent<Bullet> ();
 			bulletGO.transform.position = gameObject.transform.position;
 			bulletGO.transform.SetParent (GameController.canvas.transform);
 
-			Bullet bullet = bulletGO.GetComponent<Bullet> ();
-
 			if (bullet != null) {
-				bullet.sprite.sprite = shipBullet;
-				bullet.damage = fireDamage;
-				bullet.Seek (target.position, this);
+				bullet.Setup (target.position, this, fireDamage, shipBullet);
 			}
 		}
 	}

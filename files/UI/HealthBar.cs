@@ -26,7 +26,12 @@ public class HealthBar : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, ship.Health / ship.MaxHealth, 4 * Time.deltaTime);
-		healthText.text = Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt(ship.MaxHealth) + " [<color=" + levelColor + ">" + ship.Level +  "</color>]";
+
+		if (ship.GetType ().ToString () == "Player") {
+			healthText.text = "Player 1\n" + Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt (ship.MaxHealth) + " [<color=" + levelColor + ">" + ship.Level + "</color>]";
+		} else {
+			healthText.text = "NPC\n" + Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt (ship.MaxHealth) + " [<color=" + levelColor + ">" + ship.Level + "</color>]";
+		}
 
 		transform.rotation = Quaternion.identity;
 

@@ -8,11 +8,13 @@ public class GameModeController : MonoBehaviour {
 	[Header("Panels")]
 	public GameObject teamDeathmatchPanel;
 	public GameObject freeForAllPanel;
+	public GameObject settingsPanel;
 
 	// Use this for initialization
 	void Start () {
 		ToggleMenu (teamDeathmatchPanel);
 		ToggleMenu (freeForAllPanel);
+		ToggleMenu (settingsPanel);
 	}
 
 	public void ToggleMenu(GameObject panel){

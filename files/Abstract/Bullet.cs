@@ -2,16 +2,18 @@
 
 public class Bullet : MonoBehaviour {
 
-	public NPC firedBy;
-	public SpriteRenderer sprite;
-	public Vector3 target;//public Transform target;
-	public float speed;
-	public float damage;
-	public float explosionRadius;
+	SpriteRenderer sprite;
+	Vector3 target;
+	NPC firedBy;
+	float speed;
+	float damage;
 
-	public void Seek(Vector3 _target, NPC _firedBy){
-		firedBy = _firedBy;
-		target = _target;
+	public void Setup(Vector3 t, NPC f, float d, Sprite s){
+		firedBy = f;
+		target = t;
+		damage = d;
+		speed = 25f;
+		sprite.sprite = s;
 	}
 
 	void Awake(){
@@ -20,8 +22,8 @@ public class Bullet : MonoBehaviour {
 	}
 
 	// Update is called once per frame
-	void Update () {
-		Vector3 dir = target - transform.position;
+	void FixedUpdate () {
+		Vector2 dir = target - transform.position; //Vector3
 		float distanceThisFrame = speed * Time.deltaTime;
 
 		if (dir.magnitude <= distanceThisFrame){
@@ -31,28 +33,28 @@ public class Bullet : MonoBehaviour {
 
 		transform.Translate (dir.normalized * distanceThisFrame, Space.World);
 
-		Quaternion rotation = Quaternion.LookRotation (target - transform.position, transform.TransformDirection(Vector3.up));
+		var rotation = Quaternion.LookRotation (target - transform.position, transform.TransformDirection(Vector3.up));
 		transform.rotation = new Quaternion(0, 0, rotation.z, rotation.w);
 	}
 
-	void HitTarget(){
-		if (explosionRadius > 0f) {
-			Explode ();
+	void OnCollisionEnter2D(Collision2D collision){
+		var n = collision.gameObject.GetComponent<NPC> ();
+
+		if (n == null) {
+			Destroy (gameObject);
+			return;
+		}
+		if(n == firedBy){
+			return;
 		}
 
+		// For now, friendly fire will keep friendly units from hitting eachother
+		Damage (n.transform); // decreaseHealth (damage)
 		Destroy (gameObject);
 	}
 
-	void Explode (){
-		var colliders = new Collider2D[1];
-		var con = new ContactFilter2D ();
-
-		Physics2D.OverlapCircle(transform.position, explosionRadius, con, colliders);
-
-		foreach (Collider2D c in colliders) {
-			//var npc = collider.GetComponent<NPC> ();
-			Damage (c.transform);
-		}
+	void HitTarget(){
+		Destroy (gameObject);
 	}
 
 	void Damage (Transform enemy){
@@ -64,10 +66,5 @@ public class Bullet : MonoBehaviour {
 			}
 			e.DecreaseHealth (damage);
 		}
-	}
-
-	void OnDrawGizmosSelected(){
-		Gizmos.color = Color.red;
-		Gizmos.DrawWireSphere (transform.position, explosionRadius);
 	}
 }

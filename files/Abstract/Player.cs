@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : NPC {
 
-	//public Transform target { get; protected set; } // What is our target?
+	public Transform target { get; protected set; } // What is our target?
 	public Vector3 targetPosition { get; protected set; } // Where do we want to go?
 	public Sprite shipBullet { get; protected set; } // What bullet do we fire?
 	public float fireRate { get; protected set; } // How fast do we fire bullets?
@@ -31,8 +31,6 @@ public class Player : MonoBehaviour {
 		fireRange = playerFireRange;
 
 		gameObject.tag = shipFaction.ToString ();
-
-		InvokeRepeating ("UpdateNearestEnemy", Random.Range(1.25f, 6.75f), Random.Range(1.25f, 6.75f));
 	}
 
 	// GETTERS AND SETTERS
@@ -88,29 +86,7 @@ public class Player : MonoBehaviour {
 		Destroy (gameObject);
 	}
 
-	NPC FindNearestEnemy (){
-		NPC[] npcList = FindObjectsOfType<NPC> ();
-		NPC closest = null;
-		float distance = Mathf.Infinity;
-		Vector3 position = gameObject.transform.position;
-
-		foreach (NPC n in npcList) {
-			if (n.shipFaction == shipFaction) {
-				continue;
-			}
-
-			Vector3 diff = n.gameObject.transform.position - position;
-			float curDistance = diff.sqrMagnitude;
-
-			if (curDistance < distance || n.target == gameObject.transform) { //&& (shipFaction != n.shipFaction || shipFaction == Faction.None) )
-				closest = n;
-				distance = curDistance;
-			}
-		}
-		return closest;
-	}
-
-	void LateUpdate(){
+	void FixedUpdate(){
 		if (gameObject.transform.position != targetPosition) {
 			float delta = Speed * Time.deltaTime;
 
@@ -124,16 +100,15 @@ public class Player : MonoBehaviour {
 
 		if (fireCountdown <= 0f) {
 			for (int i = 0; i < fireBurstCount; i++) {
-				Invoke ("Shoot", (i * 1.5f) * Time.deltaTime);//Shoot ();
+				Invoke ("Shoot", (i * 1.5f) * Time.deltaTime);
 			}
 			fireCountdown = fireRate;
 		}
 		fireCountdown -= Time.deltaTime;
 	}
 
-	void OnCollisionEnter2D(Collision2D collision){ // Collision2D
+	void OnCollisionEnter2D(Collision2D collision){
 		var n = collision.gameObject.GetComponent<NPC> ();
-		//var rb = collision.gameObject.GetComponent<Rigidbody2D> ();
 
 		if (n == null) {
 			return;
@@ -148,20 +123,6 @@ public class Player : MonoBehaviour {
 	}
 
 	void Shoot(){
-		/*if (target != null && Vector2.Distance(transform.position, target.position) < fireRange) {
-			Debug.Log ("Firing at " + target.gameObject.name);
-
-			var bulletGO = Object.Instantiate (GameController.sc.bulletPrefab, gameObject.transform.position, transform.rotation);
-			bulletGO.transform.position = gameObject.transform.position;
-			bulletGO.transform.SetParent (GameController.canvas.transform);
-
-			Bullet bullet = bulletGO.GetComponent<Bullet> ();
-
-			if (bullet != null) {
-				bullet.sprite.sprite = shipBullet;
-				bullet.damage = fireDamage;
-				bullet.Seek (target.position, this);
-			}
-		}*/
+		
 	}
 }
