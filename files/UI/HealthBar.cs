@@ -3,14 +3,14 @@ using UnityEngine;
 
 public class HealthBar : MonoBehaviour {
 
-	NPC ship;
+	Character ship;
 	Image healthBar;
 	Text healthText;
 	string levelColor;
 
 	// Use this for initialization
 	void Start () {
-		ship = gameObject.GetComponentInParent<NPC> ();
+		ship = gameObject.GetComponentInParent<Character> ();
 		healthBar = gameObject.GetComponent<Image> ();
 		healthText = gameObject.GetComponentInChildren<Text> ();
 

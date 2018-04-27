@@ -23,6 +23,22 @@ public static class NPCManager {
 		return GetAlly () + GetNeutral () + GetEnemy ();
 	}
 
+	public static bool IsPlayerAlive () {
+		var p = Object.FindObjectOfType<Player> ();
+		if(p != null){ 
+			return true; 
+		}
+		return false;
+	}
+
+	public static Vector2 GetPlayerPosition () {
+		var p = Object.FindObjectOfType<Player> ();
+		if(p != null){ 
+			return p.transform.position; 
+		}
+		return Vector2.zero;
+	}
+
 	public static bool IsGameFinished(){
 		if(GetAlly() == 0 && GetNeutral() == 0 && GetTotal() >= 1){
 			return true;

@@ -15,7 +15,8 @@ public class SpriteController : MonoBehaviour {
 	public GameObject shipPrefab;
 	public GameObject enginePrefab;
 	public GameObject healthBarPrefab;
-	public GameObject bulletPrefab;
+	public GameObject npcBulletPrefab;
+	public GameObject playerBulletPrefab;
 
 	[Header("Ship Misc Sprites")]
 	public Sprite traderShipBullet;
@@ -27,5 +28,10 @@ public class SpriteController : MonoBehaviour {
 	public Sprite droneShipBullet;
 
 	[Header("Particle Prefabs")]
-	public ParticleSystem shipDeathEffect;
+	public ParticleSystem[] shipdeathEffects;
+
+	public ParticleSystem shipDeathEffect(){
+		int r = Random.Range (0, shipdeathEffects.Length);
+		return shipdeathEffects [r];
+	}
 }

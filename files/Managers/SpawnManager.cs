@@ -131,7 +131,7 @@ public static class SpawnManager {
 		// Create the body and attach sprites
 		var npc_body = Object.Instantiate (GameController.sc.shipPrefab, GameController.canvas.transform);
 
-		NPC npc = null;
+		Character npc = null;
 		if (isPlayer == true) {
 			npc = npc_body.AddComponent <Player> ();
 		} else {
@@ -160,15 +160,15 @@ public static class SpawnManager {
 		npc_m.friction = 0f;
 
 		// Initial Setup
-		npc.SetupShip (shipType, shipFaction, Random.Range (minHealth, maxHealth), shipSpeed, fireRate, fireBurstCount, fireDamage, fireRange, bulletSprite);
+		npc.SetupShip (shipType, shipFaction, Random.Range (minHealth, maxHealth), shipSpeed, fireRate, fireBurstCount, fireDamage, fireRange, bulletSprite, isPlayer);
 
 		npc_body.transform.position = position;
-		npc.gameObject.name = shipType + "" + Random.Range (1000,10000) + " [" + shipFaction + "]";
+		npc.gameObject.name = shipType + "" + Random.Range (1000, 10000) + " [" + shipFaction + "]";
 
 		// Final Setup
 		npc_rb.mass = npc.MaxHealth;
 
-		Debug.Log ("Spawned NPC of type \'<b>" + npc.shipType +  "</b>\' and of faction \'<b>" + npc.shipFaction + "</b>\'.");
+		Debug.Log ("Spawned Ship of type \'<b>" + npc.shipType + "</b>\' and of faction \'<b>" + npc.shipFaction + "</b>\'.");
 	}
 
 	public static void SpawnRandomShip( Vector2 pos, bool isPlayer = false ){

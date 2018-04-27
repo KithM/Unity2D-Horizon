@@ -3,7 +3,7 @@
 public class GameModeController : MonoBehaviour {
 
 	[Header("NPCs")]
-	NPC[] NPCs;
+	Character[] NPCs;
 
 	[Header("Panels")]
 	public GameObject teamDeathmatchPanel;
@@ -26,18 +26,19 @@ public class GameModeController : MonoBehaviour {
 	}
 
 	public void DeleteAllNPCs () {
-		NPCs = FindObjectsOfType<NPC> ();
+		NPCs = FindObjectsOfType<Character> ();
 
-		foreach(NPC n in NPCs){
+		foreach(Character n in NPCs){
 			n.SetHealth (0);
 		}
 	}
 	public void RandomTeams(int numPerTeam){
 		DeleteAllNPCs();
 
-		for (int i = 0; i < numPerTeam; i++) {
+		for (int i = 0; i < numPerTeam - 1; i++) {
 			SpawnManager.SpawnRandomAlly ( SpawnManager.GetRandomAllyPosition() );			
 		}
+		SpawnManager.SpawnRandomAlly ( SpawnManager.GetRandomAllyPosition(), true );
 		for (int i = 0; i < numPerTeam; i++) {
 			SpawnManager.SpawnRandomEnemy ( SpawnManager.GetRandomEnemyPosition() );			
 		}

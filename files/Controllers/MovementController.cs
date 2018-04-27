@@ -2,22 +2,25 @@
 
 public class MovementController : MonoBehaviour {
 
-	// Movement
 	Rigidbody2D rb;
 	public float movementSpeed;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		rb = Camera.main.GetComponent<Rigidbody2D> ();
 	}
 
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
 		UpdateCameraMovement ();
 	}
 
 	void UpdateCameraMovement() {
-		// Handle screen panning
+		if(NPCManager.IsPlayerAlive() == true){
+			Camera.main.transform.position = new Vector3(NPCManager.GetPlayerPosition ().x, NPCManager.GetPlayerPosition ().y, -10f);
+			return;
+		}
+		// Spectator Mode
 		rb.AddForce (transform.right * Input.GetAxis ("Horizontal") * movementSpeed);
 		rb.AddForce (transform.up * Input.GetAxis ("Vertical") * movementSpeed);
 	}
