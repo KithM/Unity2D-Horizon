@@ -2,9 +2,9 @@
 
 public static class NPCManager {
 
-	public static GameObject[] allies;
-	public static GameObject[] neutrals;
-	public static GameObject[] enemies;
+	static GameObject[] allies;
+	static GameObject[] neutrals;
+	static GameObject[] enemies;
 
 	public static int GetAlly () {
 		allies = GameObject.FindGameObjectsWithTag ("Ally");

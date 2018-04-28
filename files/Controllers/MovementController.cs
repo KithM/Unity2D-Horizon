@@ -17,6 +17,7 @@ public class MovementController : MonoBehaviour {
 
 	void UpdateCameraMovement() {
 		if(NPCManager.IsPlayerAlive() == true){
+			// Follow Player Mode
 			Camera.main.transform.position = new Vector3(NPCManager.GetPlayerPosition ().x, NPCManager.GetPlayerPosition ().y, -10f);
 			return;
 		}

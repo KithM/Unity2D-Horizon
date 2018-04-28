@@ -7,9 +7,9 @@ public class DisplayRemainingNPC : MonoBehaviour {
 	public Image neutralRemaining;
 	public Image enemyRemaining;
 
-	public static float fill_ally;
-	public static float fill_neutral;
-	public static float fill_enemy;
+	public float fill_ally;
+	public float fill_neutral;
+	public float fill_enemy;
 
 	void Start(){
 		InvokeRepeating ("UpdateRemaining", 2f, 2f);

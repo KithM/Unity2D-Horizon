@@ -16,7 +16,7 @@ public class NPC : Character {
 			Vector3 diff = n.gameObject.transform.position - position;
 			float curDistance = diff.sqrMagnitude;
 
-			if (curDistance < distance || n.target == gameObject.transform) { //&& (shipFaction != n.shipFaction || shipFaction == Faction.None) )
+			if (curDistance < distance || n.target == gameObject.transform) {
 				closest = n;
 				distance = curDistance;
 			}
@@ -25,7 +25,7 @@ public class NPC : Character {
 	}
 
 	public void UpdateNearestEnemy(){
-		// FIXME: Instead of calling FindNearestEnemy for all these checks, let's try and call it once, save the Character, and use that Character's values until 
+		// Instead of calling FindNearestEnemy for all these checks, call it once, save the Character, and use that Character's values until 
 		// we call this again
 		var n = FindNearestEnemy ();
 
@@ -54,7 +54,7 @@ public class NPC : Character {
 			
 		if (fireCountdown <= 0f) {
 			for (int i = 0; i < fireBurstCount; i++) {
-				Invoke ("Shoot", (i * 1.5f) * Time.deltaTime);//Shoot ();
+				Invoke ("Shoot", (i * 1.5f) * Time.deltaTime);
 			}
 			fireCountdown = fireRate;
 		}
@@ -63,7 +63,6 @@ public class NPC : Character {
 
 	public void OnCollisionEnter2D(Collision2D collision){ // Collision2D
 		var n = collision.gameObject.GetComponent<Character> ();
-		//var rb = collision.gameObject.GetComponent<Rigidbody2D> ();
 
 		if (n == null) {
 			return;

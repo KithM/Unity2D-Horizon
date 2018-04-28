@@ -18,7 +18,7 @@ public class Player : Character {
 
 		if (Input.GetMouseButtonDown (0) && fireCountdown <= 0f) {
 			for (int i = 0; i < fireBurstCount; i++) {
-				Invoke ("Shoot", (i * 1.5f) * Time.deltaTime);//Shoot ();
+				Invoke ("Shoot", (i * 1.5f) * Time.deltaTime);
 			}
 			fireCountdown = fireRate;
 		}
@@ -27,7 +27,6 @@ public class Player : Character {
 
 	public void OnCollisionEnter2D(Collision2D collision){ // Collision2D
 		var n = collision.gameObject.GetComponent<Character> ();
-		//var rb = collision.gameObject.GetComponent<Rigidbody2D> ();
 
 		if (n == null) {
 			return;

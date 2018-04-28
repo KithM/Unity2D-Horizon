@@ -26,7 +26,7 @@ public static class SpawnManager {
 			fireRate = 5f;
 			fireDamage = 5f;
 			fireBurstCount = 2f;
-			fireRange = 20f; //10f
+			fireRange = 20f;
 
 			bulletSprite = GameController.sc.traderShipBullet;
 			shipSprite = GameController.sc.traderShip;
@@ -40,7 +40,7 @@ public static class SpawnManager {
 			fireRate = 3.5f;
 			fireDamage = 7.5f;
 			fireBurstCount = 5f;
-			fireRange = 22f; //12f
+			fireRange = 22f;
 
 			bulletSprite = GameController.sc.prisonShipBullet;
 			shipSprite = GameController.sc.prisonShip;
@@ -54,7 +54,7 @@ public static class SpawnManager {
 			fireRate = 2f;
 			fireDamage = 5f;
 			fireBurstCount = 9f;
-			fireRange = 25f; //12f
+			fireRange = 25f;
 
 			bulletSprite = GameController.sc.fighterShipBullet;
 			shipSprite = GameController.sc.fighterShip;
@@ -68,7 +68,7 @@ public static class SpawnManager {
 			fireRate = 2.5f;
 			fireDamage = 15f;
 			fireBurstCount = 4f;
-			fireRange = 30f; //20f
+			fireRange = 30f;
 
 			bulletSprite = GameController.sc.advancedFighterShipBullet;
 			shipSprite = GameController.sc.advancedFighterShip;
@@ -76,13 +76,13 @@ public static class SpawnManager {
 		case Ship.Type.HeavyFighterShip:
 			minHealth = 250;
 			maxHealth = 500;
-			engineOffset = 0.300f;//0.275f;
+			engineOffset = 0.300f;
 			healthBarOffset = 1.75f;
 			shipSpeed = 2.325f;
 			fireRate = 4.5f;
 			fireDamage = 25f;
 			fireBurstCount = 3f;
-			fireRange = 36f; //20f
+			fireRange = 36f;
 
 			bulletSprite = GameController.sc.heavyFighterShipBullet;
 			shipSprite = GameController.sc.heavyFighterShip;
@@ -96,7 +96,7 @@ public static class SpawnManager {
 			fireRate = 4f;
 			fireDamage = 10f;
 			fireBurstCount = 8f;
-			fireRange = 50f; //50f
+			fireRange = 50f;
 
 			bulletSprite = GameController.sc.destroyerShipBullet;
 			shipSprite = GameController.sc.destroyerShip;
@@ -110,7 +110,7 @@ public static class SpawnManager {
 			fireRate = 2f;
 			fireDamage = 2.5f;
 			fireBurstCount = 12f;
-			fireRange = 28f; //18f
+			fireRange = 28f;
 
 			bulletSprite = GameController.sc.droneShipBullet;
 			shipSprite = GameController.sc.droneShip;
@@ -121,7 +121,7 @@ public static class SpawnManager {
 			shipSpeed = 2.5f;
 			fireDamage = 5f;
 			fireRate = 2f;
-			fireRange = 20f; //10f
+			fireRange = 20f;
 
 			bulletSprite = GameController.sc.fighterShipBullet;
 			shipSprite = GameController.sc.fighterShip;
@@ -154,10 +154,6 @@ public static class SpawnManager {
 		npc_rb.collisionDetectionMode = CollisionDetectionMode2D.Discrete;
 
 		var npc_col = npc_body.AddComponent<PolygonCollider2D> ();
-
-		var npc_m = npc_col.sharedMaterial = new PhysicsMaterial2D ();
-		npc_m.bounciness = 1f;
-		npc_m.friction = 0f;
 
 		// Initial Setup
 		npc.SetupShip (shipType, shipFaction, Random.Range (minHealth, maxHealth), shipSpeed, fireRate, fireBurstCount, fireDamage, fireRange, bulletSprite, isPlayer);
