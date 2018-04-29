@@ -164,7 +164,7 @@ public static class SpawnManager {
 		// Final Setup
 		npc_rb.mass = npc.MaxHealth;
 
-		Debug.Log ("Spawned Ship of type \'<b>" + npc.shipType + "</b>\' and of faction \'<b>" + npc.shipFaction + "</b>\'.");
+		Debug.Log ("Spawned Ship of type \'<b>" + shipType + "</b>\' and of faction \'<b>" + shipFaction + "</b>\'.");
 	}
 
 	public static void SpawnRandomShip( Vector2 pos, bool isPlayer = false ){

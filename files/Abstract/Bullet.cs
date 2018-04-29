@@ -24,12 +24,13 @@ public class Bullet : MonoBehaviour {
 
 	void FixedUpdate () {
 		Vector2 dir = target - transform.position; //Vector3
-		float distanceThisFrame = speed * Time.deltaTime;
+		float distanceThisFrame = speed * Time.fixedDeltaTime;
 
 		if (dir.magnitude <= distanceThisFrame){
 			HitTarget ();
 			return;
 		}
+
 		transform.Translate (dir.normalized * distanceThisFrame, Space.World);
 	}
 
@@ -42,7 +43,7 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void RotateToPosition(){
-		if (gameObject.name.Contains ("NPC")) {
+		if (firedBy != null && firedBy.name.Contains ("NPC")) {
 			var rotation = Quaternion.LookRotation (target - transform.position, transform.TransformDirection(Vector3.up));
 			transform.rotation = new Quaternion(0, 0, rotation.z, rotation.w);
 			return;

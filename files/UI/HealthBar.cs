@@ -21,34 +21,28 @@ public class HealthBar : MonoBehaviour {
 		} else {
 			healthBar.color = Color.blue;
 		}
+
+		levelColor = ColorUtility.ToHtmlStringRGBA(healthBar.color);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, ship.Health / ship.MaxHealth, 4 * Time.deltaTime);
+		SetRotation ();
+		SetFill ();
+		SetText ();
+	}
 
+	void SetText(){
 		if (ship.GetType ().ToString () == "Player") {
-			healthText.text = "Player 1\n" + Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt (ship.MaxHealth) + " [<color=" + levelColor + ">" + ship.Level + "</color>]";
-		} else {
-			healthText.text = "NPC\n" + Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt (ship.MaxHealth) + " [<color=" + levelColor + ">" + ship.Level + "</color>]";
+			healthText.text = "[P1] " + ship.shipClass + "\n" + Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt (ship.MaxHealth) + " [<color=#" + levelColor + ">" + ship.Level + "</color>]";
+			return;
 		}
-
+		healthText.text = ship.shipClass + "\n" + Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt (ship.MaxHealth) + " [<color=#" + levelColor + ">" + ship.Level + "</color>]";
+	}
+	void SetFill(){
+		healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, ship.Health / ship.MaxHealth, 4 * Time.deltaTime);
+	}
+	void SetRotation(){
 		transform.rotation = Quaternion.identity;
-
-		if (ship.Level >= 50) {
-			levelColor = "#b36300";
-		} else if (ship.Level >= 40) {
-			levelColor = "#cc7100";
-		} else if (ship.Level >= 30) {
-			levelColor = "#e67f00";
-		} else if (ship.Level >= 20) {
-			levelColor = "#ff8d00";
-		} else if (ship.Level >= 10) {
-			levelColor = "#ff981a";
-		} else if (ship.Level >= 5) {
-			levelColor = "#ffa433";
-		} else if (ship.Level < 5) {
-			levelColor = "#ffaf4d";
-		}
 	}
 }

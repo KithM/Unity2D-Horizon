@@ -5,23 +5,35 @@ public class DisplayRoundTitle : MonoBehaviour {
 
 	[Header("Text Elements")]
 	public Text titleText;
+	public Text spectatingText;
 
 	// Use this for initialization
 	void Start () {
 		SetEmptyText ();
+		InvokeRepeating("UpdateTitle", 1f, 1f);
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void UpdateTitle () {
 		if(NPCManager.IsGameFinished() == true){
 			SetVictoryText ();
+			return;
 		} else {
 			SetEmptyText ();
 		}
+
+		if(NPCManager.IsPlayerAlive() == false && NPCManager.IsGameFinished() == false){
+			if (string.IsNullOrEmpty (spectatingText.text)) {
+				spectatingText.text = "Free Camera";
+			}
+			return;
+		}
+		spectatingText.text = "";
 	}
 
 	void SetVictoryText(){
-		titleText.text = "VICTORY";
+		if (string.IsNullOrEmpty(titleText.text)) {
+			titleText.text = "VICTORY";
+		}
 
 		if (NPCManager.GetWinningTeam () == Ship.Faction.Ally) {
 			titleText.color = Color.green;

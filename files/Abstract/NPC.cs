@@ -1,30 +1,26 @@
 ﻿using UnityEngine;
+using System.Linq;
 
 public class NPC : Character {
 
 	Character FindNearestEnemy (){
-		Character[] npcList = FindObjectsOfType<Character> ();
+		Character[] npcList = NPCManager.GetAllShips ().ToArray ();
 		Character closest = null;
-		float distance = Mathf.Infinity;
-		Vector3 position = gameObject.transform.position;
+		Vector2 position = gameObject.transform.position;
+
+		npcList = npcList.OrderBy (x => Vector2.SqrMagnitude (x.transform.position)).ToArray();
 
 		foreach (Character n in npcList) {
 			if(n.shipFaction == shipFaction){
 				continue;
 			}
-
-			Vector3 diff = n.gameObject.transform.position - position;
-			float curDistance = diff.sqrMagnitude;
-
-			if (curDistance < distance || n.target == gameObject.transform) {
-				closest = n;
-				distance = curDistance;
-			}
+			closest = n;
+			break;
 		}
 		return closest;
 	}
 
-	public void UpdateNearestEnemy(){
+	void UpdateNearestEnemy(){
 		// Instead of calling FindNearestEnemy for all these checks, call it once, save the Character, and use that Character's values until 
 		// we call this again
 		var n = FindNearestEnemy ();
@@ -40,16 +36,9 @@ public class NPC : Character {
 		target = null;
 	}
 
-	public void FixedUpdate(){
+	void FixedUpdate(){
 		if (gameObject.transform.position != targetPosition) {
-			float delta = Speed * Time.deltaTime;
-
-			gameObject.transform.position = Vector2.MoveTowards (gameObject.transform.position, targetPosition, delta);
-
-			Vector2 vectorToTarget = targetPosition - gameObject.transform.position;
-			float angle = (Mathf.Atan2 (vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg) - 90;
-			Quaternion q = Quaternion.AngleAxis (angle, Vector3.forward);
-			transform.rotation = Quaternion.Slerp (transform.rotation, q, delta);
+			DoMovement ();
 		}
 			
 		if (fireCountdown <= 0f) {
@@ -61,14 +50,10 @@ public class NPC : Character {
 		fireCountdown -= Time.deltaTime;
 	}
 
-	public void OnCollisionEnter2D(Collision2D collision){ // Collision2D
+	void OnCollisionEnter2D(Collision2D collision){ // Collision2D
 		var n = collision.gameObject.GetComponent<Character> ();
 
-		if (n == null) {
-			return;
-		}
-
-		if(n.shipFaction == shipFaction){
+		if (n == null || n.shipFaction == shipFaction) {
 			return;
 		}
 
@@ -76,7 +61,7 @@ public class NPC : Character {
 		n.DecreaseHealth (Random.Range (Health / 100f, Health / 50f));
 	}
 
-	public void Shoot(){
+	void Shoot(){
 		if (target != null && Vector2.Distance(transform.position, target.position) < fireRange) {
 
 			var bulletGO = Object.Instantiate (GameController.sc.npcBulletPrefab, transform.position, transform.rotation);
@@ -88,5 +73,16 @@ public class NPC : Character {
 				bullet.Setup (target.position, this, fireDamage, shipBullet);
 			}
 		}
+	}
+
+	void DoMovement(){
+		float delta = Speed * Time.deltaTime;
+
+		gameObject.transform.position = Vector2.MoveTowards (gameObject.transform.position, targetPosition, delta);
+
+		Vector2 vectorToTarget = targetPosition - gameObject.transform.position;
+		float angle = (Mathf.Atan2 (vectorToTarget.y, vectorToTarget.x) * Mathf.Rad2Deg) - 90;
+		Quaternion q = Quaternion.AngleAxis (angle, Vector3.forward);
+		transform.rotation = Quaternion.Slerp (transform.rotation, q, delta);
 	}
 }

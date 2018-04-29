@@ -2,6 +2,9 @@
 
 public static class Ship {
 
+	public enum Rank {
+		Commander, General, Captain, Fighter, Recruit
+	}
 	public enum Type {
 		DestroyerShip, HeavyFighterShip, AdvancedFighterShip, FighterShip, PrisonShip, TraderShip, DroneShip
 	}
@@ -25,6 +28,7 @@ public class Character : MonoBehaviour {
 	public float Health { get; protected set; } // The current hitpoints this NPC has
 	public float Speed { get; protected set; } // The speed of the ship, based on its type
 	public int Level { get; protected set; } // What is our experience level?
+	public Ship.Rank shipClass { get; protected set; } // The current Class of the ship
 	public Ship.Type shipType { get; protected set; } // The current Type of the ship
 	public Ship.Faction shipFaction { get; protected set; } // The current Faction of the ship
 
@@ -52,6 +56,9 @@ public class Character : MonoBehaviour {
 	// GETTERS AND SETTERS
 	public void SetSpeed(float speed){
 		Speed = speed;
+	}
+	public void SetShipClass(Ship.Rank newClass){
+		shipClass = newClass;
 	}
 	public void SetShipType(Ship.Type newType){
 		shipType = newType;
@@ -95,11 +102,10 @@ public class Character : MonoBehaviour {
 		fireDamage += lvl;
 	}
 	public void Die(){
-		var deatheffect = Instantiate (GameController.sc.shipDeathEffect(), GameController.canvas.transform);
+		var deatheffect = Instantiate (GameController.sc.shipDeathEffect (), GameController.canvas.transform);
 		deatheffect.transform.position = gameObject.transform.position;
 		deatheffect.Play ();
 
 		Destroy (gameObject);
 	}
-
 }
