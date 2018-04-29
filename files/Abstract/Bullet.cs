@@ -23,7 +23,7 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		Vector2 dir = target - transform.position; //Vector3
+		Vector2 dir = target - transform.position;
 		float distanceThisFrame = speed * Time.fixedDeltaTime;
 
 		if (dir.magnitude <= distanceThisFrame){
@@ -43,19 +43,16 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void RotateToPosition(){
-		if (firedBy != null && firedBy.name.Contains ("NPC")) {
+		if (firedBy.GetType().ToString().Contains ("NPC")) {
 			var rotation = Quaternion.LookRotation (target - transform.position, transform.TransformDirection(Vector3.up));
 			transform.rotation = new Quaternion(0, 0, rotation.z, rotation.w);
 			return;
 		}
 
-		Vector3 mouse_pos = Input.mousePosition;
-		Vector3 object_pos = Camera.main.WorldToScreenPoint (transform.position);
-		mouse_pos.x = mouse_pos.x - object_pos.x;
-		mouse_pos.y = mouse_pos.y - object_pos.y;
-		mouse_pos.z = -5f;
-		float angle = Mathf.Atan2(mouse_pos.y, mouse_pos.x) * Mathf.Rad2Deg;
-		transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+		Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+		difference.Normalize();
+		float rotation_z = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.Euler(0f, 0f, rotation_z + 0f);
 	}
 
 	void OnCollisionEnter2D(Collision2D collision){
