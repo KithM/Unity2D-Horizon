@@ -1,26 +1,32 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class GameModeController : MonoBehaviour {
-
-	[Header("NPCs")]
-	Character[] NPCs;
 
 	[Header("Panels")]
 	public GameObject teamDeathmatchPanel;
 	public GameObject freeForAllPanel;
 	public GameObject scenarioPanel;
+	public GameObject customMatchPanel;
 	public GameObject settingsPanel;
+	public GameObject configurationPanel;
+
+	[Header("InputFields")]
+	public InputField customLevelInput;
+	public InputField customAmountInput;
 
 	// Use this for initialization
 	void Start () {
 		ToggleMenu (teamDeathmatchPanel);
 		ToggleMenu (freeForAllPanel);
 		ToggleMenu (scenarioPanel);
+		ToggleMenu (customMatchPanel);
 		ToggleMenu (settingsPanel);
+		ToggleMenu (configurationPanel);
 	}
 
 	public void ToggleMenu(GameObject panel){
-		if (panel.activeInHierarchy == false) {
+		if (panel.activeSelf == false) {
 			panel.SetActive (true);
 		} else {
 			panel.SetActive (false);
@@ -28,13 +34,12 @@ public class GameModeController : MonoBehaviour {
 	}
 
 	public Character[] GetAllNPCs(){
-		NPCs = FindObjectsOfType<Character> ();
-		return NPCs;
+		return NPCManager.GetAllShips ().ToArray ();
 	}
 	public void DeleteAllNPCs () {
 		GetAllNPCs ();
 
-		foreach(Character n in NPCs){
+		foreach(Character n in NPCManager.GetAllShips ()){
 			n.SetHealth (0);
 		}
 	}
@@ -216,24 +221,30 @@ public class GameModeController : MonoBehaviour {
 		}
 	}
 
-	public void RandomScenarioLevel5Teams(int numPerTeam){
-		DeleteAllNPCs();
-
-		RandomTeams (numPerTeam);
-		GetAllNPCs ();
-
-		foreach (Character n in NPCs) {
-			n.IncreaseLevel(4);
-		}
+	public void CustomMatch(){
+		// Get custom level and custom number per team from inputFields
+		RandomScenarioTeams (int.Parse(customAmountInput.text), int.Parse(customLevelInput.text));
+		ToggleMenu (customMatchPanel);
 	}
-	public void RandomScenarioLevel10Teams(int numPerTeam){
+	public void CustomMatchRandomIntInput(InputField input){
+		input.text = Random.Range(1,101).ToString();
+	}
+	public void RandomScenarioTeams(int numPerTeam, int level){
 		DeleteAllNPCs();
 
 		RandomTeams (numPerTeam);
+		IncreaseNPCLevels (level - 1);
+	}
+
+	void IncreaseNPCLevels(int amount){
 		GetAllNPCs ();
 
-		foreach (Character n in NPCs) {
-			n.IncreaseLevel(9);
+		if(NPCManager.IsGameFinished ()){
+			return;
+		}
+
+		foreach (Character n in NPCManager.GetAllShips()) {
+			n.IncreaseLevel(amount);
 		}
 	}
 }

@@ -28,14 +28,23 @@ public static class NPCManager {
 		var npcs = new List<Character> ();
 
 		foreach (GameObject a in allies) {
+			if(a == null){
+				continue;
+			}
 			var n = a.GetComponent<Character> ();
 			npcs.Add (n);
 		}
 		foreach (GameObject a in neutrals) {
+			if(a == null){
+				continue;
+			}
 			var n = a.GetComponent<Character> ();
 			npcs.Add (n);
 		}
 		foreach (GameObject a in enemies) {
+			if(a == null){
+				continue;
+			}
 			var n = a.GetComponent<Character> ();
 			npcs.Add (n);
 		}
@@ -268,16 +277,32 @@ public static class NPCManager {
 
 	static void SetShipRank(Character n){
 		var totalLevel = GetFactionTotalLevel (n.shipFaction);
-		if(n.MaxHealth >= 1000f || n.Level >= totalLevel / 1.25f){ //75
+		var totalHealth = GetFactionTotalHealth (n.shipFaction);
+		if(n.MaxHealth >= totalHealth / 1.25f || n.Level >= totalLevel / 1.05f){
+			n.SetShipClass(Ship.Rank.FleetCommander);
+			return;
+		} else if(n.MaxHealth >= totalHealth / 2.5f || n.Level >= totalLevel / 1.125f){
 			n.SetShipClass(Ship.Rank.Commander);
 			return;
-		} else if(n.MaxHealth >= 750f || n.Level >= totalLevel / 2.5f){ //50
+		} else if(n.MaxHealth >= totalHealth / 5f || n.Level >= totalLevel / 1.5f){
 			n.SetShipClass(Ship.Rank.General);
 			return;
-		} else if(n.MaxHealth >= 500f || n.Level >= totalLevel / 5f){ //25
+		} else if(n.MaxHealth >= totalHealth / 10f || n.Level >= totalLevel / 3f){
+			n.SetShipClass(Ship.Rank.SecondGeneral);
+			return;
+		} else if(n.MaxHealth >= totalHealth / 15f || n.Level >= totalLevel / 6f){
 			n.SetShipClass(Ship.Rank.Captain);
 			return;
-		} else if(n.MaxHealth >= 325f || n.Level >= totalLevel / 10f){ //10
+		} else if(n.MaxHealth >= totalHealth / 20f || n.Level >= totalLevel / 12f){
+			n.SetShipClass(Ship.Rank.SecondCaptain);
+			return;
+		} else if(n.MaxHealth >= totalHealth / 25f || n.Level >= totalLevel / 18f){
+			n.SetShipClass(Ship.Rank.SquadronCaptain);
+			return;
+		} else if(n.MaxHealth >= totalHealth / 30f || n.Level >= totalLevel / 24f){
+			n.SetShipClass(Ship.Rank.SquadronFighter);
+			return;
+		} else if(n.MaxHealth >= totalHealth / 35f || n.Level >= totalLevel / 28f){
 			n.SetShipClass(Ship.Rank.Fighter);
 			return;
 		}

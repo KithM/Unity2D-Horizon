@@ -30,15 +30,16 @@ public class Player : Character {
 	}
 
 	void Shoot(){
-		if (Vector2.Distance(transform.position, targetPosition) < fireRange) {
-
-			var bulletGO = Object.Instantiate (GameController.sc.npcBulletPrefab, transform.position, transform.rotation);
+		// TODO: The ship bullets can be fired clicking anywhere, but limit their distance to the maximum firerange 
+		// (the difference between the clicked position (our targetPosition), and our fireRange)
+		if (Vector2.Distance (transform.position, targetPosition) < fireRange) {
+			var bulletGO = Object.Instantiate (GameController.oc.npcBulletPrefab, transform.position, transform.rotation);
 			var bullet = bulletGO.GetComponent<Bullet> ();
 			bulletGO.transform.position = gameObject.transform.position;
 			bulletGO.transform.SetParent (GameController.canvas.transform);
 
 			if (bullet != null) {
-				bullet.Setup (targetPosition, this, fireDamage, shipBullet);
+				bullet.Setup (targetPosition, this, fireDamage, shipBullet); //targetPosition
 			}
 		}
 	}

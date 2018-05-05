@@ -41,7 +41,7 @@ public class NPC : Character {
 			DoMovement ();
 		}
 			
-		if (fireCountdown <= 0f) {
+		if (fireCountdown <= 0f && target) {
 			for (int i = 0; i < fireBurstCount; i++) {
 				Invoke ("Shoot", (i * 1.5f) * Time.deltaTime);
 			}
@@ -64,7 +64,7 @@ public class NPC : Character {
 	void Shoot(){
 		if (target != null && Vector2.Distance(transform.position, target.position) < fireRange) {
 
-			var bulletGO = Object.Instantiate (GameController.sc.npcBulletPrefab, transform.position, transform.rotation);
+			var bulletGO = Object.Instantiate (GameController.oc.npcBulletPrefab, transform.position, transform.rotation);
 			var bullet = bulletGO.GetComponent<Bullet> ();
 			bulletGO.transform.position = gameObject.transform.position;
 			bulletGO.transform.SetParent (GameController.canvas.transform);

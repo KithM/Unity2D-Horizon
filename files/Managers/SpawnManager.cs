@@ -23,13 +23,13 @@ public static class SpawnManager {
 			engineOffset = 0f;
 			healthBarOffset = 1.25f;
 			shipSpeed = 3.25f;
-			fireRate = 5f;
+			fireRate = 3f;
 			fireDamage = 5f;
-			fireBurstCount = 2f;
+			fireBurstCount = 4f;
 			fireRange = 20f;
 
-			bulletSprite = GameController.sc.traderShipBullet;
-			shipSprite = GameController.sc.traderShip;
+			bulletSprite = GameController.oc.traderShipBullet;
+			shipSprite = GameController.oc.traderShip;
 			break;
 		case Ship.Type.PrisonShip:
 			minHealth = 50;
@@ -42,8 +42,8 @@ public static class SpawnManager {
 			fireBurstCount = 5f;
 			fireRange = 22f;
 
-			bulletSprite = GameController.sc.prisonShipBullet;
-			shipSprite = GameController.sc.prisonShip;
+			bulletSprite = GameController.oc.prisonShipBullet;
+			shipSprite = GameController.oc.prisonShip;
 			break;
 		case Ship.Type.FighterShip:
 			minHealth = 50;
@@ -56,8 +56,8 @@ public static class SpawnManager {
 			fireBurstCount = 9f;
 			fireRange = 25f;
 
-			bulletSprite = GameController.sc.fighterShipBullet;
-			shipSprite = GameController.sc.fighterShip;
+			bulletSprite = GameController.oc.fighterShipBullet;
+			shipSprite = GameController.oc.fighterShip;
 			break;
 		case Ship.Type.AdvancedFighterShip:
 			minHealth = 100;
@@ -70,8 +70,8 @@ public static class SpawnManager {
 			fireBurstCount = 4f;
 			fireRange = 30f;
 
-			bulletSprite = GameController.sc.advancedFighterShipBullet;
-			shipSprite = GameController.sc.advancedFighterShip;
+			bulletSprite = GameController.oc.advancedFighterShipBullet;
+			shipSprite = GameController.oc.advancedFighterShip;
 			break;
 		case Ship.Type.HeavyFighterShip:
 			minHealth = 250;
@@ -84,8 +84,8 @@ public static class SpawnManager {
 			fireBurstCount = 3f;
 			fireRange = 36f;
 
-			bulletSprite = GameController.sc.heavyFighterShipBullet;
-			shipSprite = GameController.sc.heavyFighterShip;
+			bulletSprite = GameController.oc.heavyFighterShipBullet;
+			shipSprite = GameController.oc.heavyFighterShip;
 			break;
 		case Ship.Type.DestroyerShip:
 			minHealth = 500;
@@ -98,8 +98,8 @@ public static class SpawnManager {
 			fireBurstCount = 8f;
 			fireRange = 50f;
 
-			bulletSprite = GameController.sc.destroyerShipBullet;
-			shipSprite = GameController.sc.destroyerShip;
+			bulletSprite = GameController.oc.destroyerShipBullet;
+			shipSprite = GameController.oc.destroyerShip;
 			break;
 		case Ship.Type.DroneShip:
 			minHealth = 25;
@@ -112,8 +112,8 @@ public static class SpawnManager {
 			fireBurstCount = 12f;
 			fireRange = 28f;
 
-			bulletSprite = GameController.sc.droneShipBullet;
-			shipSprite = GameController.sc.droneShip;
+			bulletSprite = GameController.oc.droneShipBullet;
+			shipSprite = GameController.oc.droneShip;
 			break;
 		default:
 			minHealth = 50;
@@ -123,13 +123,13 @@ public static class SpawnManager {
 			fireRate = 2f;
 			fireRange = 20f;
 
-			bulletSprite = GameController.sc.fighterShipBullet;
-			shipSprite = GameController.sc.fighterShip;
+			bulletSprite = GameController.oc.fighterShipBullet;
+			shipSprite = GameController.oc.fighterShip;
 			break;
 		}
 
 		// Create the body and attach sprites
-		var npc_body = Object.Instantiate (GameController.sc.shipPrefab, GameController.canvas.transform);
+		var npc_body = Object.Instantiate (GameController.oc.shipPrefab, GameController.canvas.transform);
 
 		Character npc = null;
 		if (isPlayer == true) {
@@ -141,10 +141,10 @@ public static class SpawnManager {
 		var npc_sprite = npc_body.GetComponent<SpriteRenderer> ();
 		npc_sprite.sprite = shipSprite;
 
-		var npc_thrusters = Object.Instantiate (GameController.sc.enginePrefab, npc_body.transform);
+		var npc_thrusters = Object.Instantiate (GameController.oc.enginePrefab, npc_body.transform);
 		npc_thrusters.transform.position = new Vector3(npc_body.transform.position.x, npc_body.transform.position.y - engineOffset, npc_body.transform.position.z);
 
-		var npc_healthBar = Object.Instantiate (GameController.sc.healthBarPrefab, npc_body.transform);
+		var npc_healthBar = Object.Instantiate (GameController.oc.healthBarPrefab, npc_body.transform);
 		npc_healthBar.transform.position = new Vector3(npc_body.transform.position.x, npc_body.transform.position.y + healthBarOffset, npc_body.transform.position.z);
 
 		// Set up RigidBody2D and Collider
@@ -155,11 +155,13 @@ public static class SpawnManager {
 
 		var npc_col = npc_body.AddComponent<PolygonCollider2D> ();
 
+		int identifier = Random.Range (100, 999);
+		npc.gameObject.name = shipType + "" + identifier + " [" + shipFaction + "]";
+
 		// Initial Setup
-		npc.SetupShip (shipType, shipFaction, Random.Range (minHealth, maxHealth), shipSpeed, fireRate, fireBurstCount, fireDamage, fireRange, bulletSprite, isPlayer);
+		npc.SetupShip (shipType, shipFaction, identifier, Random.Range (minHealth, maxHealth), shipSpeed, fireRate, fireBurstCount, fireDamage, fireRange, bulletSprite, isPlayer);
 
 		npc_body.transform.position = position;
-		npc.gameObject.name = shipType + "" + Random.Range (1000, 10000) + " [" + shipFaction + "]";
 
 		// Final Setup
 		npc_rb.mass = npc.MaxHealth;

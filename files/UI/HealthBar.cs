@@ -5,6 +5,7 @@ public class HealthBar : MonoBehaviour {
 
 	Character ship;
 	Image healthBar;
+	Image rank;
 	Text healthText;
 	string levelColor;
 
@@ -13,6 +14,7 @@ public class HealthBar : MonoBehaviour {
 		ship = gameObject.GetComponentInParent<Character> ();
 		healthBar = gameObject.GetComponent<Image> ();
 		healthText = gameObject.GetComponentInChildren<Text> ();
+		rank = healthText.GetComponentInChildren<Image> (true);
 
 		if(ship.shipFaction == Ship.Faction.Ally){
 			healthBar.color = Color.green;
@@ -35,9 +37,10 @@ public class HealthBar : MonoBehaviour {
 	void SetText(){
 		if (ship.GetType ().ToString () == "Player") {
 			healthText.text = "[P1] " + ship.shipClass + "\n" + Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt (ship.MaxHealth) + " [<color=#" + levelColor + ">" + ship.Level + "</color>]";
-			return;
+		} else {
+			healthText.text = "[N" + ship.Identifier + "] " + ship.shipClass + "\n" + Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt (ship.MaxHealth) + " [<color=#" + levelColor + ">" + ship.Level + "</color>]";
 		}
-		healthText.text = ship.shipClass + "\n" + Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt (ship.MaxHealth) + " [<color=#" + levelColor + ">" + ship.Level + "</color>]";
+		rank.sprite = GameController.oc.GetRankImage (ship.shipClass);
 	}
 	void SetFill(){
 		healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, ship.Health / ship.MaxHealth, 4 * Time.deltaTime);

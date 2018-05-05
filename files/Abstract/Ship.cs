@@ -3,7 +3,7 @@
 public static class Ship {
 
 	public enum Rank {
-		Commander, General, Captain, Fighter, Recruit
+		FleetCommander, Commander, General, SecondGeneral, Captain, SecondCaptain, SquadronCaptain, SquadronFighter, Fighter, Recruit
 	}
 	public enum Type {
 		DestroyerShip, HeavyFighterShip, AdvancedFighterShip, FighterShip, PrisonShip, TraderShip, DroneShip
@@ -27,12 +27,13 @@ public class Character : MonoBehaviour {
 	public float MaxHealth { get; protected set; } // The maximum hitpoints this NPC can have
 	public float Health { get; protected set; } // The current hitpoints this NPC has
 	public float Speed { get; protected set; } // The speed of the ship, based on its type
+	public int Identifier { get; protected set; } // The identifier number of the ship
 	public int Level { get; protected set; } // What is our experience level?
 	public Ship.Rank shipClass { get; protected set; } // The current Class of the ship
 	public Ship.Type shipType { get; protected set; } // The current Type of the ship
 	public Ship.Faction shipFaction { get; protected set; } // The current Faction of the ship
 
-	public virtual void SetupShip (Ship.Type npcType, Ship.Faction npcFaction, float npcHealth, float npcSpeed, float npcFireRate, float npcBurstRate, float npcFireDamage, float npcFireRange, Sprite npcBullet, bool isPlayer){
+	public virtual void SetupShip (Ship.Type npcType, Ship.Faction npcFaction, int identifier, float npcHealth, float npcSpeed, float npcFireRate, float npcBurstRate, float npcFireDamage, float npcFireRange, Sprite npcBullet, bool isPlayer){
 		SetShipType (npcType);
 		SetShipFaction (npcFaction);
 		SetMaxHealth (npcHealth);
@@ -44,6 +45,7 @@ public class Character : MonoBehaviour {
 		fireBurstCount = npcBurstRate;
 		fireDamage = npcFireDamage;
 		fireRange = npcFireRange;
+		Identifier = identifier;
 
 		gameObject.tag = shipFaction.ToString ();
 
@@ -98,11 +100,12 @@ public class Character : MonoBehaviour {
 	}
 	public void IncreaseLevel(int lvl){
 		Level += lvl;
+		SetMaxHealth (MaxHealth + lvl);
 		IncreaseHealth (lvl * Level);
-		fireDamage += lvl;
+		fireDamage += (float)lvl / 10f;
 	}
 	public void Die(){
-		var deatheffect = Instantiate (GameController.sc.shipDeathEffect (), GameController.canvas.transform);
+		var deatheffect = Instantiate (GameController.oc.shipDeathEffect (), GameController.canvas.transform);
 		deatheffect.transform.position = gameObject.transform.position;
 		deatheffect.Play ();
 

@@ -17,9 +17,8 @@ public class DisplayRoundTitle : MonoBehaviour {
 		if(NPCManager.IsGameFinished() == true){
 			SetVictoryText ();
 			return;
-		} else {
-			SetEmptyText ();
 		}
+		SetEmptyText ();
 
 		if(NPCManager.IsPlayerAlive() == false && NPCManager.IsGameFinished() == false){
 			if (string.IsNullOrEmpty (spectatingText.text)) {
@@ -31,8 +30,9 @@ public class DisplayRoundTitle : MonoBehaviour {
 	}
 
 	void SetVictoryText(){
-		if (string.IsNullOrEmpty(titleText.text)) {
+		if (string.IsNullOrEmpty(titleText.text) || string.IsNullOrEmpty(spectatingText.text)) {
 			titleText.text = "VICTORY";
+			spectatingText.text = "";
 		}
 
 		if (NPCManager.GetWinningTeam () == Ship.Faction.Ally) {
