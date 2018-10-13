@@ -2,16 +2,16 @@
 
 public class GameController : MonoBehaviour {
 
-	public static Camera mainCamera { get; protected set; }
-	public static ObjectController oc { get; protected set; }
-	public static Canvas canvas { get; protected set; }
-	public static float defaultTimeScale;
+	// Instance
+	public static GameController current;
+
+	public Canvas canvas { get; protected set; }
+	public float defaultTimeScale;
 
 	void Awake(){
 		// Set up our references
-		mainCamera = Camera.main;
+		current = this;
 		canvas = GameObject.Find ("WORLDCANVAS").GetComponent<Canvas>();
-		oc = FindObjectOfType<ObjectController> ();
 
 		InvokeRepeating ("ClearLag", 1f, 1f);
 		InvokeRepeating ("UpdateShipRanks", 1f, 1f);
@@ -19,7 +19,7 @@ public class GameController : MonoBehaviour {
 
 	void Update(){
 		if (Input.GetKeyDown (KeyCode.Escape) || Input.GetKeyDown(KeyCode.P)) {
-			if (IsGamePaused () == true) {
+			if (IsGamePaused ()) {
 				PauseGame (false);
 				return;
 			}
@@ -36,29 +36,29 @@ public class GameController : MonoBehaviour {
 	}
 
 	void UpdateShipRanks(){
-		NPCManager.UpdateShipRanks ();
+		NPCManager.current.UpdateShipRanks ();
 	}
 
-	public static bool IsGamePaused(){
+	public bool IsGamePaused(){
 		if(Time.timeScale <= 0f){
 			return true;
 		}
 		return false;
 	}
 
-	public static void PauseGame(bool doPause = true){
+	public void PauseGame(bool doPause = true){
 		// We are not changing our defaultTimeScale because it would interfere with the user's choice
 		// and (since time isn't advancing anyway) the timeScale will not be reset with deltaTime
-		if (doPause == true) {
+		if (doPause) {
 			Time.timeScale = 0f;
-			oc.pausePanel.SetActive(true);
+			ObjectController.current.pausePanel.SetActive(true);
 			return;
 		}
 		Time.timeScale = defaultTimeScale;
-		oc.pausePanel.SetActive(false);
+		ObjectController.current.pausePanel.SetActive(false);
 	}
 
-	public static void ExitGame () {
+	public void ExitGame () {
 		Application.Quit ();
 	}
 }

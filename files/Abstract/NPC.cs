@@ -4,17 +4,18 @@ using System.Linq;
 public class NPC : Character {
 
 	Character FindNearestEnemy (){
-		Character[] npcList = NPCManager.GetAllShips ().ToArray ();
+		var ships = NPCManager.current.GetAllShips ();
 		Character closest = null;
 		Vector2 position = gameObject.transform.position;
 
-		npcList = npcList.OrderBy (x => Vector2.SqrMagnitude (x.transform.position)).ToArray();
+		ships = ships.OrderBy (x => Vector2.SqrMagnitude (x.transform.position)).ToArray();
 
-		foreach (Character n in npcList) {
-			if(n.shipFaction == shipFaction){
+		int i;
+		for (i = 0; i < ships.Length; i++) {
+			if(ships[i].shipFaction == shipFaction){
 				continue;
 			}
-			closest = n;
+			closest = ships[i];
 			break;
 		}
 		return closest;
@@ -64,10 +65,10 @@ public class NPC : Character {
 	void Shoot(){
 		if (target != null && Vector2.Distance(transform.position, target.position) < fireRange) {
 
-			var bulletGO = Object.Instantiate (GameController.oc.npcBulletPrefab, transform.position, transform.rotation);
+			var bulletGO = Object.Instantiate (ObjectController.current.npcBulletPrefab, transform.position, transform.rotation);
 			var bullet = bulletGO.GetComponent<Bullet> ();
 			bulletGO.transform.position = gameObject.transform.position;
-			bulletGO.transform.SetParent (GameController.canvas.transform);
+			bulletGO.transform.SetParent (GameController.current.canvas.transform);
 
 			if (bullet != null) {
 				bullet.Setup (target.position, this, fireDamage, shipBullet);

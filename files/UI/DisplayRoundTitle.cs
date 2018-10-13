@@ -14,13 +14,13 @@ public class DisplayRoundTitle : MonoBehaviour {
 	}
 
 	void UpdateTitle () {
-		if(NPCManager.IsGameFinished() == true){
+		if(NPCManager.current.IsGameFinished()){
 			SetVictoryText ();
 			return;
 		}
 		SetEmptyText ();
 
-		if(NPCManager.IsPlayerAlive() == false && NPCManager.IsGameFinished() == false){
+		if(!NPCManager.current.IsPlayerAlive () && !NPCManager.current.IsGameFinished ()){
 			if (string.IsNullOrEmpty (spectatingText.text)) {
 				spectatingText.text = "Free Camera";
 			}
@@ -35,11 +35,11 @@ public class DisplayRoundTitle : MonoBehaviour {
 			spectatingText.text = "";
 		}
 
-		if (NPCManager.GetWinningTeam () == Ship.Faction.Ally) {
+		if (NPCManager.current.GetWinningTeam () == Ship.Faction.Ally) {
 			titleText.color = Color.green;
-		} else if (NPCManager.GetWinningTeam () == Ship.Faction.Neutral){
+		} else if (NPCManager.current.GetWinningTeam () == Ship.Faction.Neutral){
 			titleText.color = Color.blue;
-		} else if (NPCManager.GetWinningTeam () == Ship.Faction.Enemy){
+		} else if (NPCManager.current.GetWinningTeam () == Ship.Faction.Enemy){
 			titleText.color = Color.red;
 		}
 	}

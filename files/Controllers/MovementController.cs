@@ -7,7 +7,7 @@ public class MovementController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		rb = GameController.mainCamera.GetComponent<Rigidbody2D> ();
+		rb = Camera.main.GetComponent<Rigidbody2D> ();
 	}
 
 	// Update is called once per frame
@@ -16,10 +16,10 @@ public class MovementController : MonoBehaviour {
 	}
 
 	void UpdateCameraMovement() {
-		if(NPCManager.IsPlayerAlive() == true){
+		if(NPCManager.current.IsPlayerAlive()){
 			// Follow Player Mode
-			var pos = NPCManager.GetPlayerPosition ();
-			GameController.mainCamera.transform.position = new Vector3(pos.x, pos.y, -10f);
+			var pos = NPCManager.current.GetPlayerPosition ();
+			Camera.main.transform.position = new Vector3(pos.x, pos.y, -10f);
 			return;
 		}
 		// Spectator Mode

@@ -10,7 +10,8 @@ public class Player : Character {
 		}
 
 		if (Input.GetMouseButtonDown (0) && fireCountdown <= 0f) {
-			for (int i = 0; i < fireBurstCount; i++) {
+			int i;
+			for (i = 0; i < fireBurstCount; i++) {
 				Invoke ("Shoot", (i * 1.5f) * Time.deltaTime);
 			}
 			fireCountdown = fireRate;
@@ -30,13 +31,13 @@ public class Player : Character {
 	}
 
 	void Shoot(){
-		// TODO: The ship bullets can be fired clicking anywhere, but limit their distance to the maximum firerange 
+		// TODO: The ship bullets can be fired clicking anywhere, but limit their distance to the maximum firerange
 		// (the difference between the clicked position (our targetPosition), and our fireRange)
 		if (Vector2.Distance (transform.position, targetPosition) < fireRange) {
-			var bulletGO = Object.Instantiate (GameController.oc.npcBulletPrefab, transform.position, transform.rotation);
+			var bulletGO = Object.Instantiate (ObjectController.current.npcBulletPrefab, transform.position, transform.rotation);
 			var bullet = bulletGO.GetComponent<Bullet> ();
 			bulletGO.transform.position = gameObject.transform.position;
-			bulletGO.transform.SetParent (GameController.canvas.transform);
+			bulletGO.transform.SetParent (GameController.current.canvas.transform);
 
 			if (bullet != null) {
 				bullet.Setup (targetPosition, this, fireDamage, shipBullet); //targetPosition

@@ -40,7 +40,7 @@ public class HealthBar : MonoBehaviour {
 		} else {
 			healthText.text = "[N" + ship.Identifier + "] " + ship.shipClass + "\n" + Mathf.RoundToInt (ship.Health) + " \\ " + Mathf.RoundToInt (ship.MaxHealth) + " [<color=#" + levelColor + ">" + ship.Level + "</color>]";
 		}
-		rank.sprite = GameController.oc.GetRankImage (ship.shipClass);
+		rank.sprite = ObjectController.current.GetRankImage (ship.shipClass);
 	}
 	void SetFill(){
 		healthBar.fillAmount = Mathf.Lerp(healthBar.fillAmount, ship.Health / ship.MaxHealth, 4 * Time.deltaTime);

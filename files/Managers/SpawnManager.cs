@@ -1,8 +1,15 @@
 ﻿using UnityEngine;
 
-public static class SpawnManager {
+public class SpawnManager : MonoBehaviour {
 
-	public static void Spawn(Ship.Type shipType, Ship.Faction shipFaction, Vector2 position, bool isPlayer = false){
+	// Instance
+	public static SpawnManager current;
+
+	void Awake(){
+		current = this;
+	}
+
+	public void SpawnShip(Ship.Type shipType, Ship.Faction shipFaction, Vector2 position, bool isPlayer = false){
 
 		Sprite shipSprite;
 		Sprite bulletSprite;
@@ -28,8 +35,8 @@ public static class SpawnManager {
 			fireBurstCount = 4f;
 			fireRange = 20f;
 
-			bulletSprite = GameController.oc.traderShipBullet;
-			shipSprite = GameController.oc.traderShip;
+			bulletSprite = ObjectController.current.traderShipBullet;
+			shipSprite = ObjectController.current.traderShip;
 			break;
 		case Ship.Type.PrisonShip:
 			minHealth = 50;
@@ -37,13 +44,13 @@ public static class SpawnManager {
 			engineOffset = 0.25f;
 			healthBarOffset = 1.625f;
 			shipSpeed = 2.5f;
-			fireRate = 3.5f;
+			fireRate = 3f;
 			fireDamage = 7.5f;
 			fireBurstCount = 5f;
 			fireRange = 22f;
 
-			bulletSprite = GameController.oc.prisonShipBullet;
-			shipSprite = GameController.oc.prisonShip;
+			bulletSprite = ObjectController.current.prisonShipBullet;
+			shipSprite = ObjectController.current.prisonShip;
 			break;
 		case Ship.Type.FighterShip:
 			minHealth = 50;
@@ -56,8 +63,8 @@ public static class SpawnManager {
 			fireBurstCount = 9f;
 			fireRange = 25f;
 
-			bulletSprite = GameController.oc.fighterShipBullet;
-			shipSprite = GameController.oc.fighterShip;
+			bulletSprite = ObjectController.current.fighterShipBullet;
+			shipSprite = ObjectController.current.fighterShip;
 			break;
 		case Ship.Type.AdvancedFighterShip:
 			minHealth = 100;
@@ -70,8 +77,8 @@ public static class SpawnManager {
 			fireBurstCount = 4f;
 			fireRange = 30f;
 
-			bulletSprite = GameController.oc.advancedFighterShipBullet;
-			shipSprite = GameController.oc.advancedFighterShip;
+			bulletSprite = ObjectController.current.advancedFighterShipBullet;
+			shipSprite = ObjectController.current.advancedFighterShip;
 			break;
 		case Ship.Type.HeavyFighterShip:
 			minHealth = 250;
@@ -84,8 +91,8 @@ public static class SpawnManager {
 			fireBurstCount = 3f;
 			fireRange = 36f;
 
-			bulletSprite = GameController.oc.heavyFighterShipBullet;
-			shipSprite = GameController.oc.heavyFighterShip;
+			bulletSprite = ObjectController.current.heavyFighterShipBullet;
+			shipSprite = ObjectController.current.heavyFighterShip;
 			break;
 		case Ship.Type.DestroyerShip:
 			minHealth = 500;
@@ -98,8 +105,8 @@ public static class SpawnManager {
 			fireBurstCount = 8f;
 			fireRange = 50f;
 
-			bulletSprite = GameController.oc.destroyerShipBullet;
-			shipSprite = GameController.oc.destroyerShip;
+			bulletSprite = ObjectController.current.destroyerShipBullet;
+			shipSprite = ObjectController.current.destroyerShip;
 			break;
 		case Ship.Type.DroneShip:
 			minHealth = 25;
@@ -112,8 +119,8 @@ public static class SpawnManager {
 			fireBurstCount = 12f;
 			fireRange = 28f;
 
-			bulletSprite = GameController.oc.droneShipBullet;
-			shipSprite = GameController.oc.droneShip;
+			bulletSprite = ObjectController.current.droneShipBullet;
+			shipSprite = ObjectController.current.droneShip;
 			break;
 		default:
 			minHealth = 50;
@@ -123,16 +130,16 @@ public static class SpawnManager {
 			fireRate = 2f;
 			fireRange = 20f;
 
-			bulletSprite = GameController.oc.fighterShipBullet;
-			shipSprite = GameController.oc.fighterShip;
+			bulletSprite = ObjectController.current.fighterShipBullet;
+			shipSprite = ObjectController.current.fighterShip;
 			break;
 		}
 
 		// Create the body and attach sprites
-		var npc_body = Object.Instantiate (GameController.oc.shipPrefab, GameController.canvas.transform);
+		var npc_body = Object.Instantiate (ObjectController.current.shipPrefab, GameController.current.canvas.transform);
 
-		Character npc = null;
-		if (isPlayer == true) {
+		Character npc;
+		if (isPlayer) {
 			npc = npc_body.AddComponent <Player> ();
 		} else {
 			npc = npc_body.AddComponent <NPC> ();
@@ -141,10 +148,10 @@ public static class SpawnManager {
 		var npc_sprite = npc_body.GetComponent<SpriteRenderer> ();
 		npc_sprite.sprite = shipSprite;
 
-		var npc_thrusters = Object.Instantiate (GameController.oc.enginePrefab, npc_body.transform);
+		var npc_thrusters = Object.Instantiate (ObjectController.current.enginePrefab, npc_body.transform);
 		npc_thrusters.transform.position = new Vector3(npc_body.transform.position.x, npc_body.transform.position.y - engineOffset, npc_body.transform.position.z);
 
-		var npc_healthBar = Object.Instantiate (GameController.oc.healthBarPrefab, npc_body.transform);
+		var npc_healthBar = Object.Instantiate (ObjectController.current.healthBarPrefab, npc_body.transform);
 		npc_healthBar.transform.position = new Vector3(npc_body.transform.position.x, npc_body.transform.position.y + healthBarOffset, npc_body.transform.position.z);
 
 		// Set up RigidBody2D and Collider
@@ -160,52 +167,51 @@ public static class SpawnManager {
 
 		// Initial Setup
 		npc.SetupShip (shipType, shipFaction, identifier, Random.Range (minHealth, maxHealth), shipSpeed, fireRate, fireBurstCount, fireDamage, fireRange, bulletSprite, isPlayer);
-
 		npc_body.transform.position = position;
 
 		// Final Setup
 		npc_rb.mass = npc.MaxHealth;
 
-		Debug.Log ("Spawned Ship of type \'<b>" + shipType + "</b>\' and of faction \'<b>" + shipFaction + "</b>\'.");
+		//Debug.Log ("Spawned Ship of type \'<b>" + shipType + "</b>\' and of faction \'<b>" + shipFaction + "</b>\'.");
 	}
 
-	public static void SpawnRandomShip( Vector2 pos, bool isPlayer = false ){
+	public void SpawnRandomShip( Vector2 pos, bool isPlayer = false ){
 		Ship.Type npcType = GetRandomShipType ();
 		Ship.Faction npcFaction = GetRandomShipFaction();
-		SpawnManager.Spawn (npcType, npcFaction, pos, isPlayer);
+		SpawnManager.current.SpawnShip (npcType, npcFaction, pos, isPlayer);
 	}
 
-	public static void SpawnRandomAlly( Vector2 pos, bool isPlayer = false ){
-		SpawnManager.Spawn (GetRandomShipType (), Ship.Faction.Ally, pos, isPlayer);
+	public void SpawnRandomAlly( Vector2 pos, bool isPlayer = false ){
+		SpawnManager.current.SpawnShip (GetRandomShipType (), Ship.Faction.Ally, pos, isPlayer);
 	}
-	public static void SpawnRandomNeutral( Vector2 pos, bool isPlayer = false ){
-		SpawnManager.Spawn (GetRandomShipType (), Ship.Faction.Neutral, pos, isPlayer);
+	public void SpawnRandomNeutral( Vector2 pos, bool isPlayer = false ){
+		SpawnManager.current.SpawnShip (GetRandomShipType (), Ship.Faction.Neutral, pos, isPlayer);
 	}
-	public static void SpawnRandomEnemy( Vector2 pos, bool isPlayer = false ){
-		SpawnManager.Spawn (GetRandomShipType (), Ship.Faction.Enemy, pos, isPlayer);
-	}
-
-	public static void SpawnRandomHeavyAlly( Vector2 pos, bool isPlayer = false ){
-		SpawnManager.Spawn (GetRandomHeavyShipType (), Ship.Faction.Ally, pos, isPlayer);
-	}
-	public static void SpawnRandomHeavyNeutral( Vector2 pos, bool isPlayer = false ){
-		SpawnManager.Spawn (GetRandomHeavyShipType (), Ship.Faction.Neutral, pos, isPlayer);
-	}
-	public static void SpawnRandomHeavyEnemy( Vector2 pos, bool isPlayer = false ){
-		SpawnManager.Spawn (GetRandomHeavyShipType (), Ship.Faction.Enemy, pos, isPlayer);
+	public void SpawnRandomEnemy( Vector2 pos, bool isPlayer = false ){
+		SpawnManager.current.SpawnShip (GetRandomShipType (), Ship.Faction.Enemy, pos, isPlayer);
 	}
 
-	public static void SpawnRandomLightAlly( Vector2 pos, bool isPlayer = false ){
-		SpawnManager.Spawn (GetRandomLightShipType (), Ship.Faction.Ally, pos, isPlayer);
+	public void SpawnRandomHeavyAlly( Vector2 pos, bool isPlayer = false ){
+		SpawnManager.current.SpawnShip (GetRandomHeavyShipType (), Ship.Faction.Ally, pos, isPlayer);
 	}
-	public static void SpawnRandomLightNeutral( Vector2 pos, bool isPlayer = false ){
-		SpawnManager.Spawn (GetRandomLightShipType (), Ship.Faction.Neutral, pos, isPlayer);
+	public void SpawnRandomHeavyNeutral( Vector2 pos, bool isPlayer = false ){
+		SpawnManager.current.SpawnShip (GetRandomHeavyShipType (), Ship.Faction.Neutral, pos, isPlayer);
 	}
-	public static void SpawnRandomLightEnemy( Vector2 pos, bool isPlayer = false ){
-		SpawnManager.Spawn (GetRandomLightShipType (), Ship.Faction.Enemy, pos, isPlayer);
+	public void SpawnRandomHeavyEnemy( Vector2 pos, bool isPlayer = false ){
+		SpawnManager.current.SpawnShip (GetRandomHeavyShipType (), Ship.Faction.Enemy, pos, isPlayer);
 	}
 
-	public static Ship.Type GetRandomShipType(){		
+	public void SpawnRandomLightAlly( Vector2 pos, bool isPlayer = false ){
+		SpawnManager.current.SpawnShip (GetRandomLightShipType (), Ship.Faction.Ally, pos, isPlayer);
+	}
+	public void SpawnRandomLightNeutral( Vector2 pos, bool isPlayer = false ){
+		SpawnManager.current.SpawnShip (GetRandomLightShipType (), Ship.Faction.Neutral, pos, isPlayer);
+	}
+	public void SpawnRandomLightEnemy( Vector2 pos, bool isPlayer = false ){
+		SpawnManager.current.SpawnShip (GetRandomLightShipType (), Ship.Faction.Enemy, pos, isPlayer);
+	}
+
+	public Ship.Type GetRandomShipType(){		
 		int randT = Random.Range (0, 7);
 		Ship.Type npcType;
 
@@ -239,7 +245,7 @@ public static class SpawnManager {
 		return npcType;
 	}
 
-	public static Ship.Faction GetRandomShipFaction(){
+	public Ship.Faction GetRandomShipFaction(){
 		int randF = Random.Range (0, 3);
 		Ship.Faction npcFaction;
 
@@ -261,7 +267,7 @@ public static class SpawnManager {
 		return npcFaction;
 	}
 
-	public static Ship.Type GetRandomHeavyShipType(){		
+	public Ship.Type GetRandomHeavyShipType(){		
 		int randT = Random.Range (0, 3);
 		Ship.Type npcType;
 
@@ -283,7 +289,7 @@ public static class SpawnManager {
 		return npcType;
 	}
 
-	public static Ship.Type GetRandomLightShipType(){		
+	public Ship.Type GetRandomLightShipType(){		
 		int randT = Random.Range (0, 4);
 		Ship.Type npcType;
 
@@ -308,13 +314,13 @@ public static class SpawnManager {
 		return npcType;
 	}
 
-	public static Vector2 GetRandomAllyPosition(){
+	public Vector2 GetRandomAllyPosition(){
 		return new Vector2 (Random.Range (-125f, -100f), Random.Range (-125f, 125f));
 	}
-	public static Vector2 GetRandomEnemyPosition(){
+	public Vector2 GetRandomEnemyPosition(){
 		return new Vector2 (Random.Range (125f, 100f), Random.Range (-125f, 125f));
 	}
-	public static Vector2 GetRandomPosition(){
+	public Vector2 GetRandomPosition(){
 		return new Vector2 (Random.Range (-125f, 125f), Random.Range (-125f, 125f));
 	}
 }

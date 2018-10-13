@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class GameModeController : MonoBehaviour {
 
+	// Instance
+	public static GameModeController current;
+
 	[Header("Panels")]
 	public GameObject teamDeathmatchPanel;
 	public GameObject freeForAllPanel;
@@ -16,6 +19,9 @@ public class GameModeController : MonoBehaviour {
 	public InputField customAmountInput;
 
 	// Use this for initialization
+	void Awake(){
+		current = this;
+	}
 	void Start () {
 		ToggleMenu (teamDeathmatchPanel);
 		ToggleMenu (freeForAllPanel);
@@ -26,48 +32,43 @@ public class GameModeController : MonoBehaviour {
 	}
 
 	public void ToggleMenu(GameObject panel){
-		if (panel.activeSelf == false) {
+		if (!panel.activeSelf) {
 			panel.SetActive (true);
 		} else {
 			panel.SetActive (false);
 		}
 	}
 
-	public Character[] GetAllNPCs(){
-		return NPCManager.GetAllShips ().ToArray ();
-	}
 	public void DeleteAllNPCs () {
-		GetAllNPCs ();
-
-		foreach(Character n in NPCManager.GetAllShips ()){
-			n.SetHealth (0);
+		var ships = NPCManager.current.GetAllShips ();
+		int i;
+		for (i = 0; i < ships.Length; i++) {
+			ships[i].SetHealth (0);
 		}
 	}
 	public void RandomTeams(int numPerTeam){
-		DeleteAllNPCs();
+		DeleteAllNPCs ();
 
 		int r = Random.Range (0,2);
 
 		switch (r) {
 		case 0:
-			SpawnManager.SpawnRandomAlly ( SpawnManager.GetRandomAllyPosition(), true );
+			SpawnManager.current.SpawnRandomAlly ( SpawnManager.current.GetRandomAllyPosition(), true );
 			for (int i = 0; i < numPerTeam - 1; i++) {
-				SpawnManager.SpawnRandomAlly ( SpawnManager.GetRandomAllyPosition() );			
+				SpawnManager.current.SpawnRandomAlly ( SpawnManager.current.GetRandomAllyPosition() );			
 			}
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomEnemy ( SpawnManager.GetRandomEnemyPosition() );			
+				SpawnManager.current.SpawnRandomEnemy ( SpawnManager.current.GetRandomEnemyPosition() );			
 			}
 			break;
 		case 1:
-			SpawnManager.SpawnRandomEnemy ( SpawnManager.GetRandomEnemyPosition(), true );
+			SpawnManager.current.SpawnRandomEnemy ( SpawnManager.current.GetRandomEnemyPosition(), true );
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomAlly ( SpawnManager.GetRandomAllyPosition() );			
+				SpawnManager.current.SpawnRandomAlly ( SpawnManager.current.GetRandomAllyPosition() );			
 			}
 			for (int i = 0; i < numPerTeam - 1; i++) {
-				SpawnManager.SpawnRandomEnemy ( SpawnManager.GetRandomEnemyPosition() );			
+				SpawnManager.current.SpawnRandomEnemy ( SpawnManager.current.GetRandomEnemyPosition() );			
 			}
-			break;
-		default:
 			break;
 		}
 	}
@@ -78,24 +79,22 @@ public class GameModeController : MonoBehaviour {
 
 		switch (r) {
 		case 0:
-			SpawnManager.SpawnRandomHeavyAlly ( SpawnManager.GetRandomAllyPosition(), true );
+			SpawnManager.current.SpawnRandomHeavyAlly ( SpawnManager.current.GetRandomAllyPosition(), true );
 			for (int i = 0; i < numPerTeam - 1; i++) {
-				SpawnManager.SpawnRandomHeavyAlly ( SpawnManager.GetRandomAllyPosition() );			
+				SpawnManager.current.SpawnRandomHeavyAlly ( SpawnManager.current.GetRandomAllyPosition() );			
 			}
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomHeavyEnemy ( SpawnManager.GetRandomEnemyPosition() );			
+				SpawnManager.current.SpawnRandomHeavyEnemy ( SpawnManager.current.GetRandomEnemyPosition() );			
 			}
 			break;
 		case 1:
-			SpawnManager.SpawnRandomHeavyEnemy ( SpawnManager.GetRandomEnemyPosition(), true );
+			SpawnManager.current.SpawnRandomHeavyEnemy ( SpawnManager.current.GetRandomEnemyPosition(), true );
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomHeavyAlly ( SpawnManager.GetRandomAllyPosition() );			
+				SpawnManager.current.SpawnRandomHeavyAlly ( SpawnManager.current.GetRandomAllyPosition() );			
 			}
 			for (int i = 0; i < numPerTeam - 1; i++) {
-				SpawnManager.SpawnRandomHeavyEnemy ( SpawnManager.GetRandomEnemyPosition() );			
+				SpawnManager.current.SpawnRandomHeavyEnemy ( SpawnManager.current.GetRandomEnemyPosition() );			
 			}
-			break;
-		default:
 			break;
 		}
 	}
@@ -106,24 +105,22 @@ public class GameModeController : MonoBehaviour {
 
 		switch (r) {
 		case 0:
-			SpawnManager.SpawnRandomLightAlly ( SpawnManager.GetRandomAllyPosition(), true );
+			SpawnManager.current.SpawnRandomLightAlly ( SpawnManager.current.GetRandomAllyPosition(), true );
 			for (int i = 0; i < numPerTeam - 1; i++) {
-				SpawnManager.SpawnRandomLightAlly ( SpawnManager.GetRandomAllyPosition() );			
+				SpawnManager.current.SpawnRandomLightAlly ( SpawnManager.current.GetRandomAllyPosition() );			
 			}
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomLightEnemy ( SpawnManager.GetRandomEnemyPosition() );			
+				SpawnManager.current.SpawnRandomLightEnemy ( SpawnManager.current.GetRandomEnemyPosition() );			
 			}
 			break;
 		case 1:
-			SpawnManager.SpawnRandomLightEnemy ( SpawnManager.GetRandomEnemyPosition(), true );
+			SpawnManager.current.SpawnRandomLightEnemy ( SpawnManager.current.GetRandomEnemyPosition(), true );
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomLightAlly ( SpawnManager.GetRandomAllyPosition() );			
+				SpawnManager.current.SpawnRandomLightAlly ( SpawnManager.current.GetRandomAllyPosition() );			
 			}
 			for (int i = 0; i < numPerTeam - 1; i++) {
-				SpawnManager.SpawnRandomLightEnemy ( SpawnManager.GetRandomEnemyPosition() );			
+				SpawnManager.current.SpawnRandomLightEnemy ( SpawnManager.current.GetRandomEnemyPosition() );			
 			}
-			break;
-		default:
 			break;
 		}
 	}
@@ -134,42 +131,40 @@ public class GameModeController : MonoBehaviour {
 
 		switch (r) {
 		case 0:
-			SpawnManager.SpawnRandomAlly ( SpawnManager.GetRandomPosition(), true );			
+			SpawnManager.current.SpawnRandomAlly ( SpawnManager.current.GetRandomPosition(), true );			
 			for (int i = 0; i < numPerTeam - 1; i++) {
-				SpawnManager.SpawnRandomAlly ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomAlly ( SpawnManager.current.GetRandomPosition() );			
 			}
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomNeutral ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomNeutral ( SpawnManager.current.GetRandomPosition() );			
 			}
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomEnemy ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomEnemy ( SpawnManager.current.GetRandomPosition() );			
 			}
 			break;
 		case 1:
-			SpawnManager.SpawnRandomNeutral ( SpawnManager.GetRandomPosition(), true );			
+			SpawnManager.current.SpawnRandomNeutral ( SpawnManager.current.GetRandomPosition(), true );			
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomAlly ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomAlly ( SpawnManager.current.GetRandomPosition() );			
 			}
 			for (int i = 0; i < numPerTeam - 1; i++) {
-				SpawnManager.SpawnRandomNeutral ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomNeutral ( SpawnManager.current.GetRandomPosition() );			
 			}
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomEnemy ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomEnemy ( SpawnManager.current.GetRandomPosition() );			
 			}
 			break;
 		case 2:
-			SpawnManager.SpawnRandomEnemy ( SpawnManager.GetRandomPosition(), true );			
+			SpawnManager.current.SpawnRandomEnemy ( SpawnManager.current.GetRandomPosition(), true );			
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomAlly ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomAlly ( SpawnManager.current.GetRandomPosition() );			
 			}
 			for (int i = 0; i < numPerTeam; i++) {
-				SpawnManager.SpawnRandomNeutral ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomNeutral ( SpawnManager.current.GetRandomPosition() );			
 			}
 			for (int i = 0; i < numPerTeam - 1; i++) {
-				SpawnManager.SpawnRandomEnemy ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomEnemy ( SpawnManager.current.GetRandomPosition() );			
 			}
-			break;
-		default:
 			break;
 		}
 	}
@@ -181,42 +176,40 @@ public class GameModeController : MonoBehaviour {
 
 		switch (rand) {
 		case 0:
-			SpawnManager.SpawnRandomHeavyAlly ( SpawnManager.GetRandomPosition(), true );			
+			SpawnManager.current.SpawnRandomHeavyAlly ( SpawnManager.current.GetRandomPosition(), true );			
 			for (int i = 0; i < num - 1; i++) {
-				SpawnManager.SpawnRandomHeavyAlly ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomHeavyAlly ( SpawnManager.current.GetRandomPosition() );			
 			}
 			for (int i = 0; i < num * 3; i++) {
-				SpawnManager.SpawnRandomLightEnemy ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomLightEnemy ( SpawnManager.current.GetRandomPosition() );			
 			}
 			break;
 		case 1:
-			SpawnManager.SpawnRandomLightAlly ( SpawnManager.GetRandomPosition(), true );
+			SpawnManager.current.SpawnRandomLightAlly ( SpawnManager.current.GetRandomPosition(), true );
 			for (int i = 0; i < (num * 3) - 1; i++) {
-				SpawnManager.SpawnRandomLightAlly ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomLightAlly ( SpawnManager.current.GetRandomPosition() );			
 			}
 			for (int i = 0; i < num; i++) {
-				SpawnManager.SpawnRandomHeavyEnemy ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomHeavyEnemy ( SpawnManager.current.GetRandomPosition() );			
 			}
 			break;
 		case 2:
-			SpawnManager.SpawnRandomLightEnemy ( SpawnManager.GetRandomPosition(), true );			
+			SpawnManager.current.SpawnRandomLightEnemy ( SpawnManager.current.GetRandomPosition(), true );			
 			for (int i = 0; i < num; i++) {
-				SpawnManager.SpawnRandomHeavyAlly ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomHeavyAlly ( SpawnManager.current.GetRandomPosition() );			
 			}
 			for (int i = 0; i < (num * 3) - 1; i++) {
-				SpawnManager.SpawnRandomLightEnemy ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomLightEnemy ( SpawnManager.current.GetRandomPosition() );			
 			}
 			break;
 		case 3:
-			SpawnManager.SpawnRandomHeavyEnemy ( SpawnManager.GetRandomPosition(), true );			
+			SpawnManager.current.SpawnRandomHeavyEnemy ( SpawnManager.current.GetRandomPosition(), true );			
 			for (int i = 0; i < num - 1; i++) {
-				SpawnManager.SpawnRandomLightAlly ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomLightAlly ( SpawnManager.current.GetRandomPosition() );			
 			}
 			for (int i = 0; i < num * 3; i++) {
-				SpawnManager.SpawnRandomHeavyEnemy ( SpawnManager.GetRandomPosition() );			
+				SpawnManager.current.SpawnRandomHeavyEnemy ( SpawnManager.current.GetRandomPosition() );			
 			}
-			break;
-		default:
 			break;
 		}
 	}
@@ -236,15 +229,15 @@ public class GameModeController : MonoBehaviour {
 		IncreaseNPCLevels (level - 1);
 	}
 
-	void IncreaseNPCLevels(int amount){
-		GetAllNPCs ();
-
-		if(NPCManager.IsGameFinished ()){
+	public void IncreaseNPCLevels(int amount){
+		if(NPCManager.current.IsGameFinished ()){
 			return;
 		}
 
-		foreach (Character n in NPCManager.GetAllShips()) {
-			n.IncreaseLevel(amount);
+		int i;
+		var ships = NPCManager.current.GetAllShips ();
+		for (i = 0; i < ships.Length; i++) {
+			ships[i].IncreaseLevel (amount);
 		}
 	}
 }

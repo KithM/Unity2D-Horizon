@@ -105,7 +105,7 @@ public class Character : MonoBehaviour {
 		fireDamage += (float)lvl / 10f;
 	}
 	public void Die(){
-		var deatheffect = Instantiate (GameController.oc.shipDeathEffect (), GameController.canvas.transform);
+		var deatheffect = Instantiate (ObjectController.current.shipDeathEffect (), GameController.current.canvas.transform);
 		deatheffect.transform.position = gameObject.transform.position;
 		deatheffect.Play ();
 

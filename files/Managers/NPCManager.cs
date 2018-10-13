@@ -1,58 +1,51 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Linq;
 
-public static class NPCManager {
+public class NPCManager : MonoBehaviour {
 
-	static GameObject[] allies;
-	static GameObject[] neutrals;
-	static GameObject[] enemies;
+	public static NPCManager current;
 
-	public static int GetAlly () {
+	public GameObject[] allies;
+	public GameObject[] neutrals;
+	public GameObject[] enemies;
+
+	void Awake(){
+		current = this;
+	}
+
+	public int GetAlly () {
 		allies = GameObject.FindGameObjectsWithTag ("Ally");
 		return allies.Length;
 	}
-	public static int GetNeutral () {
+	public int GetNeutral () {
 		neutrals = GameObject.FindGameObjectsWithTag ("Neutral");
 		return neutrals.Length;
 	}
-	public static int GetEnemy () {
+	public int GetEnemy () {
 		enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 		return enemies.Length;
 	}
 
-	public static int GetTotal(){
+	public int GetTotal(){
 		return GetAlly () + GetNeutral () + GetEnemy ();
 	}
 
-	public static List<Character> GetAllShips(){
-		var npcs = new List<Character> ();
+	public Character[] GetAllShips(){
+		allies = GameObject.FindGameObjectsWithTag ("Ally");
+		neutrals = GameObject.FindGameObjectsWithTag ("Neutral");
+		enemies = GameObject.FindGameObjectsWithTag ("Enemy");
 
-		foreach (GameObject a in allies) {
-			if(a == null){
-				continue;
-			}
-			var n = a.GetComponent<Character> ();
-			npcs.Add (n);
-		}
-		foreach (GameObject a in neutrals) {
-			if(a == null){
-				continue;
-			}
-			var n = a.GetComponent<Character> ();
-			npcs.Add (n);
-		}
-		foreach (GameObject a in enemies) {
-			if(a == null){
-				continue;
-			}
-			var n = a.GetComponent<Character> ();
-			npcs.Add (n);
-		}
+		var ships = allies.Concat (neutrals).Concat(enemies).ToArray();
+		var shipscripts = new Character[ships.Length];
 
-		return npcs;
+		int i;
+		for (i = 0; i < ships.Length; i++) {
+			shipscripts [i] = ships [i].GetComponent<Character> ();
+		}
+		return shipscripts;
 	}
 
-	public static bool IsPlayerAlive () {
+	public bool IsPlayerAlive () {
 		if(allies == null || neutrals == null || enemies == null ){
 			return false;
 		}
@@ -90,7 +83,7 @@ public static class NPCManager {
 		return false;
 	}
 
-	public static Vector2 GetPlayerPosition () {
+	public Vector2 GetPlayerPosition () {
 		foreach (GameObject a in allies) {
 			if(a == null){
 				continue;
@@ -125,7 +118,7 @@ public static class NPCManager {
 		return Vector2.zero;
 	}
 
-	public static float GetAllTotalHealth() {
+	public float GetAllTotalHealth() {
 		float totalHealth = 0f;
 
 		foreach (GameObject a in allies) {
@@ -152,7 +145,7 @@ public static class NPCManager {
 
 		return totalHealth;
 	}
-	public static float GetFactionTotalHealth(Ship.Faction faction) {
+	public float GetFactionTotalHealth(Ship.Faction faction) {
 		float health = 0f;
 		switch (faction) {
 		case Ship.Faction.Ally:
@@ -182,13 +175,11 @@ public static class NPCManager {
 				health += n.Health;
 			}
 			break;
-		default:
-			break;
 		}
 
 		return health;
 	}
-	public static float GetFactionTotalLevel(Ship.Faction faction) {
+	public float GetFactionTotalLevel(Ship.Faction faction) {
 		float level = 0f;
 		switch (faction) {
 		case Ship.Faction.Ally:
@@ -218,14 +209,12 @@ public static class NPCManager {
 				level += n.Level;
 			}
 			break;
-		default:
-			break;
 		}
 
 		return level;
 	}
 
-	public static bool IsGameFinished(){
+	public bool IsGameFinished(){
 		if(GetAlly() == 0 && GetNeutral() == 0 && GetTotal() > 0){
 			return true;
 		} else if (GetAlly() == 0 && GetEnemy() == 0 && GetTotal() > 0){
@@ -236,7 +225,7 @@ public static class NPCManager {
 		return false;
 	}
 
-	public static Ship.Faction GetWinningTeam(){
+	public Ship.Faction GetWinningTeam(){
 		if(GetAlly() == 0 && GetNeutral() == 0 && GetTotal() > 0){
 			return Ship.Faction.Enemy;
 		} else if (GetAlly() == 0 && GetEnemy() == 0 && GetTotal() > 0){
@@ -248,7 +237,7 @@ public static class NPCManager {
 		return Ship.Faction.Neutral;
 	}
 
-	public static void UpdateShipRanks(){
+	public void UpdateShipRanks(){
 		if(GetTotal() < 1){
 			return;
 		}
@@ -275,7 +264,7 @@ public static class NPCManager {
 		}
 	}
 
-	static void SetShipRank(Character n){
+	public void SetShipRank(Character n){
 		var totalLevel = GetFactionTotalLevel (n.shipFaction);
 		var totalHealth = GetFactionTotalHealth (n.shipFaction);
 		if(n.MaxHealth >= totalHealth / 1.25f || n.Level >= totalLevel / 1.05f){

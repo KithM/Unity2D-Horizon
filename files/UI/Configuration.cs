@@ -1,6 +1,6 @@
-﻿using UnityStandardAssets.CinematicEffects;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using UnityEngine;
+using UnityStandardAssets.ImageEffects;
 
 public class Configuration : MonoBehaviour {
 
@@ -19,24 +19,25 @@ public class Configuration : MonoBehaviour {
 	}
 
 	public void ResetValues(){
-		bloomThreshold.value = 0.9f;
-		bloomIntensity.value = 0.7f;
+		bloomThreshold.value = 0.3f;
+		bloomIntensity.value = 1f;
 		timeScale.value = 1f;
 		antiAliasing.value = 1;
 		qualityLevel.value = 4;
 	}
 
 	public void LoadValues(){
-		if(PlayerPrefs.HasKey("bloomThreshold")){
+		if (PlayerPrefs.HasKey ("bloomThreshold")) {
 			bloomThreshold.value = PlayerPrefs.GetFloat ("bloomThreshold");
 		} else {
-			bloomThreshold.value = 0.9f;
+			bloomThreshold.value = 0.3f;
 		}
 		if (PlayerPrefs.HasKey ("bloomIntensity")) {
-			bloomIntensity.value = PlayerPrefs.GetFloat ("bloomIntensity");
+			bloomIntensity.value = PlayerPrefs.GetInt ("bloomIntensity");
 		} else {
-			bloomIntensity.value = 0.7f;
+			bloomIntensity.value = 1f;
 		}
+
 		if (PlayerPrefs.HasKey ("defaultTimeScale")) {
 			timeScale.value = PlayerPrefs.GetFloat ("defaultTimeScale");
 		} else {
@@ -55,17 +56,17 @@ public class Configuration : MonoBehaviour {
 	}
 
 	public void ChangeBloomThreshold(){
-		var bloom = GameController.mainCamera.GetComponent<Bloom> ();
-		bloom.settings.threshold = bloomThreshold.value;
+		var bloom = Camera.main.GetComponent<Bloom> ();
+		bloom.bloomThreshold = bloomThreshold.value;
 		PlayerPrefs.SetFloat ("bloomThreshold", bloomThreshold.value);
 	}
 	public void ChangeBloomIntensity(){
-		var bloom = GameController.mainCamera.GetComponent<Bloom> ();
-		bloom.settings.intensity = bloomIntensity.value;
+		var bloom = Camera.main.GetComponent<Bloom> ();
+		bloom.bloomIntensity = bloomIntensity.value;
 		PlayerPrefs.SetFloat ("bloomIntensity", bloomIntensity.value);
 	}
 	public void ChangeTimescale(){
-		GameController.defaultTimeScale = timeScale.value;
+		GameController.current.defaultTimeScale = timeScale.value;
 		PlayerPrefs.SetFloat ("defaultTimeScale", timeScale.value);
 	}
 	public void ChangeAntiAliasing(){

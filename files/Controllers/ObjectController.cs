@@ -2,6 +2,9 @@
 
 public class ObjectController : MonoBehaviour {
 
+	// Instance
+	public static ObjectController current;
+
 	[Header("Ship Sprites")]
 	public Sprite traderShip;
 	public Sprite prisonShip;
@@ -39,47 +42,39 @@ public class ObjectController : MonoBehaviour {
 	public Sprite commander;
 	public Sprite fleetCommander;
 
-	[Header("Particle Prefabs")]
-	public ParticleSystem[] shipdeathEffects;
+	[Header("Misc Prefabs")]
+	public ParticleSystem[] shipDeathEffects;
 
 	[Header("Panels")]
 	public GameObject pausePanel;
 
+	void Awake(){
+		current = this;
+	}
 	public ParticleSystem shipDeathEffect(){
-		int r = Random.Range (0, shipdeathEffects.Length);
-		return shipdeathEffects [r];
+		int r = Random.Range (0, shipDeathEffects.Length);
+		return shipDeathEffects [r];
 	}
 	public Sprite GetRankImage(Ship.Rank rank){
 		switch (rank) {
 		case Ship.Rank.FleetCommander:
 			return fleetCommander;
-			break;
 		case Ship.Rank.Commander:
 			return commander;
-			break;
 		case Ship.Rank.General:
 			return general;
-			break;
 		case Ship.Rank.SecondGeneral:
 			return secondGeneral;
-			break;
 		case Ship.Rank.Captain:
 			return captain;
-			break;
 		case Ship.Rank.SecondCaptain:
 			return secondCaptain;
-			break;
 		case Ship.Rank.SquadronCaptain:
 			return squadronCaptain;
-			break;
 		case Ship.Rank.SquadronFighter:
 			return squadronFighter;
-			break;
 		case Ship.Rank.Fighter:
 			return fighter;
-			break;
-		default:
-			break;
 		}
 		return recruit;
 	}
@@ -87,5 +82,9 @@ public class ObjectController : MonoBehaviour {
 	public void FlipX(GameObject go){
 		// Flips the object on the x-axis
 		go.transform.Rotate (new Vector2(180f, 0f));
+	}
+	public void FlipY(GameObject go){
+		// Flips the object on the y-axis
+		go.transform.Rotate (new Vector2(0f, 180f));
 	}
 }

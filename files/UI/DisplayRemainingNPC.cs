@@ -29,10 +29,10 @@ public class DisplayRemainingNPC : MonoBehaviour {
 	}
 
 	void UpdateRemaining(){
-		if (NPCManager.GetTotal() > 0){
-			fill_ally = (float)NPCManager.GetAlly() / (float)NPCManager.GetTotal();
-			fill_neutral = (float)NPCManager.GetNeutral() / (float)NPCManager.GetTotal();
-			fill_enemy = (float)NPCManager.GetEnemy() / (float)NPCManager.GetTotal();
+		if (NPCManager.current.GetTotal() > 0){
+			fill_ally = (float)NPCManager.current.GetAlly() / (float)NPCManager.current.GetTotal();
+			fill_neutral = (float)NPCManager.current.GetNeutral() / (float)NPCManager.current.GetTotal();
+			fill_enemy = (float)NPCManager.current.GetEnemy() / (float)NPCManager.current.GetTotal();
 		} else {
 			fill_ally = 0;
 			fill_neutral = 0;
@@ -41,7 +41,7 @@ public class DisplayRemainingNPC : MonoBehaviour {
 	}
 
 	void UpdateWinChances(){
-		if (NPCManager.GetTotal () > 0) {
+		if (NPCManager.current.GetTotal () > 0) {
 			allyWinChanceText.text = 
 				Mathf.RoundToInt(GetFactionTotalHealth(Ship.Faction.Ally) * 100f) + 
 				" [" + GetFactionTotalLevel(Ship.Faction.Ally) + "]";
@@ -59,9 +59,9 @@ public class DisplayRemainingNPC : MonoBehaviour {
 	}
 
 	float GetFactionTotalHealth(Ship.Faction faction){
-		return NPCManager.GetFactionTotalHealth (faction) / NPCManager.GetAllTotalHealth ();
+		return NPCManager.current.GetFactionTotalHealth (faction) / NPCManager.current.GetAllTotalHealth ();
 	}
 	float GetFactionTotalLevel(Ship.Faction faction){
-		return NPCManager.GetFactionTotalLevel (faction);
+		return NPCManager.current.GetFactionTotalLevel (faction);
 	}
 }
